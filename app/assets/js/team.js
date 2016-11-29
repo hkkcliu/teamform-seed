@@ -22,24 +22,7 @@ angular.module('teamform-team-app', ['firebase'])
 
 	$scope.jointeam = function()
 	{
-		/*
-		 firebase.auth().onAuthStateChanged(function(user) {
-		 	console.log(user);
-    	if (user) {
-    		console.log(user);
-        	userPath = "/user/" + user.uid;
-        	userref = firebase.database().ref(userPath);
 
-        	var eventPath ="/event/" + eventName +"/members/"+ userid;
-        	var eventref = firebase.database().ref(eventPath);
-
-        	eventref.set({ joined : true })	 
-    	} else {
-   
-    // No user is signed in.
-    }
-    });
-*/
 	    var user = firebase.auth().currentUser;
 	    console.log(user);
 
@@ -49,6 +32,25 @@ angular.module('teamform-team-app', ['firebase'])
 	        var name;
 	        var position;
 	        var isPositionEmpty = true;
+			var teamPath ="/event/" + eventName +"/team/" + teamName;
+			var teamref = firebase.database().ref(teamPath);
+			
+			var current_team;
+
+	teamref.once("value",function(snapshot)
+	{
+		console.log(snapshot.val());
+		current_team = snapshot.val().NumMembers;
+		current_team = current_team +1;
+		console.log(current_team);
+		teamref.update(
+			{
+				'NumMembers' : current_team
+			}
+		);
+	})
+		
+			
 
 	        userref.once("value", function(data) {
 	        	console.log(data.val());
